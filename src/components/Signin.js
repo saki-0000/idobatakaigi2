@@ -44,10 +44,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function SignIn ({ SetName }) {
+export default function SignIn ({ setName }) {
   const classes = useStyles()
   const [disabled, setDisabled] = useState(true)
   const [string, setString] = useState('')
+  const [isComposed, setIsComposed] = useState(false)
   console.log(disabled, string)
 
   useEffect(() => {
@@ -73,14 +74,27 @@ export default function SignIn ({ SetName }) {
             name='name'
             autoFocus
             onChange={e => setString(e.target.value)}
+            onKeyDown={e => {
+              console.log(e.key)
+              if (isComposed) return
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                setName(string)
+              }
+            }}
+            onCompositionStart={() => setIsComposed(true)}
+            onCompositionEnd={() => setIsComposed(false)}
           />
           <Button
-            type='submit'
+            type='button'
             fullWidth
             variant='contained'
             color='primary'
             className={classes.submit}
             disabled={disabled}
+            onClick={() => {
+              setName(string)
+            }}
           >
             はじめる
           </Button>
